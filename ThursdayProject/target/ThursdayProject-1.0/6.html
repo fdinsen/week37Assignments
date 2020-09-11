@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <input type="number" placeholder="Enter id of person" id="personId">
+            <input type="button" value="Get User" id="getUserButton">
+            <input type="button" value="Get All" id="getAll">
+            <div id="dataContainer">
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+    document.getElementById("getUserButton").addEventListener("click", getUser);
+    document.getElementById("getAll").addEventListener("click", getAll);
+
+    function getUser() {
+        let id = document.getElementById("personId").value;
+        let url = "https://jsonplaceholder.typicode.com/users/" + id;
+        fetch(url)
+                .then(res => res.json()) //in flow1, just do it
+                .then(data => {
+                    // Inside this callback, and only here, the response data is available
+                    console.log("data", data);
+                    /* data now contains the response, converted to JavaScript
+                     Observe the output from the log-output above
+                     Now, just build your DOM changes using the data*/
+                    let dataHTML = "<p>Name: " + data.name + "</p>\n" +
+                            "<p>Phone: " + data.phone + "</p>\n" +
+                            "<p>Website: " + data.website + "</p>\n" +
+                            "<p>Username: " + data.username + "</p>\n\n" +
+                            "<h1>Address</h1>\n" +
+                            "<p>Street: " + data.address.street + "</p>\n" +
+                            "<p>City: " + data.address.city + "</p>\n" +
+                            "<p>Zip: " + data.address.zipcode + "</p>\n" +
+                            "<p>Geo: " + data.address.geo.lat + ", " + data.address.geo.lng + "</p>";
+                    document.getElementById("dataContainer").innerHTML = dataHTML;
+                });
+    }
+
+    function getAll() {
+        let url = "https://jsonplaceholder.typicode.com/users/";
+        fetch(url)
+                .then(res => res.json()) //in flow1, just do it
+                .then(data => {
+                    // Inside this callback, and only here, the response data is available
+                    console.log("data", data);
+                    /* data now contains the response, converted to JavaScript
+                     Observe the output from the log-output above
+                     Now, just build your DOM changes using the data*/
+                    let dataHTML = "<table><thead><th>ID</th><th>Name</th>" + 
+                            "<th>Phone</th><th>Email</th><th>City</th></thead><tbody>";
+                    data.map( person => {
+                        dataHTML += "<tr>";
+                        dataHTML += "<td>" + person.id + "</td>";
+                        dataHTML += "<td>" + person.name + "</td>";
+                        dataHTML += "<td>" + person.phone + "</td>";
+                        dataHTML += "<td>" + person.email + "</td>";
+                        dataHTML += "<td>" + person.address.city + "</td>";
+                        dataHTML += "</tr>";
+                    });
+                    dataHTML += "</tbody></table>";
+                    document.getElementById("dataContainer").innerHTML = dataHTML;
+                });
+
+    }
+
+</script>

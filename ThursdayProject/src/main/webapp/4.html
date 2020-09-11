@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body onLoad="createTable()">
+        <div id="outer"></div>
+        <div class="form-inline">
+            <input type="number" class="form-control" id="priceFilter" placeholder="Price less than">
+            <button type="button" class="btn btn-light" id="filterButton">Price less than</button>
+        </div>
+    </body>
+</html>
+
+<script>
+    var cars = [
+        {id: 1, year: 1997, make: 'Ford', model: 'E350', price: 3000},
+        {id: 2, year: 1999, make: 'Chevy', model: 'Venture', price: 4900},
+        {id: 3, year: 2000, make: 'Chevy', model: 'Venture', price: 5000},
+        {id: 4, year: 1996, make: 'Jeep', model: 'Grand Cherokee', price: 4799},
+        {id: 5, year: 2005, make: 'Volvo', model: 'V70', price: 44799}
+    ];
+    
+    document.getElementById("filterButton").addEventListener("click", filterPrice);
+    
+    function filterPrice() {
+        let topValue = document.getElementById("priceFilter").value;
+        let filteredArray = cars.filter(function(car) {
+            return car.price <= topValue;
+        });
+        createTable(filteredArray);
+    }
+
+    function createTable(array) {
+        let table = "<table class=\"table\">";
+        //header and categories
+        table += "<tr> <th class=\"col\">id</th> <th class=\"col\">year</th> <th class=\"col\">make</th> <th class=\"col\">model</th> <th class=\"col\">price</th> </tr>";
+        
+        //Array will be undefined if called from body-onLoad.
+        let elementsAsHTML;
+        if(typeof array === "undefined") {
+            //Gets the data from each car as a html table string, makes an array of those
+            elementsAsHTML = cars.map(getCarDataAsHTML);
+        }else {
+            elementsAsHTML = array.map(getCarDataAsHTML);
+        }
+        
+        //Runs through the array of html strings and adds it to the table
+        elementsAsHTML.forEach(function(element) {table += element;});
+        //finishes table tags
+        table += "</tr></td></table>";
+        //Adds table to page
+        document.getElementById("outer").innerHTML = table;
+    }
+    
+    function getCarDataAsHTML(car) {
+        let carString = "<tr><td>"; 
+        carString += car.id + "</td class=\"row\"><td>";
+        carString += car.year + "</td><td>";
+        carString += car.make + "</td><td>";
+        carString += car.model + "</td><td>";
+        carString += car.price + "</td><td>";
+        carString += "</tr>";
+        return carString;
+    }
+
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>

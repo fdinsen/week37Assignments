@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="container">
+            <div id="display" class="t4"></div>
+            <div id="buttons">
+                <div class="t1" id="7">7</div>
+                <div class="t1" id="8">8</div>
+                <div class="t1" id="9">9</div>
+                <div class="t1 operator" id="divide">/</div>
+
+                <div class="t1" id="4">4</div>
+                <div class="t1" id="5">5</div>
+                <div class="t1" id="6">6</div>
+                <div class="t1 operator" id="multiply">*</div>
+
+                <div class="t1" id="1">1</div>
+                <div class="t1" id="2">2</div>
+                <div class="t1" id="3">3</div>
+                <div class="t1 operator" id="subtract">-</div>
+
+                <div class="t1" id="0">0</div>
+                <div class="t1" id=".">.</div>
+                <div class="t1 operator" id="add">+</div>
+                <div class="t1" id="calculate" >=</div>
+            </div>
+        </div>
+        <div class="t1" id="clr">Clear</div>
+
+    </body>
+</html>
+
+<script>
+    document.getElementById("container").addEventListener("click", handleClick);
+    document.getElementById("clr").addEventListener("click", clear);
+    let display = "";
+    let savedNumber = "";
+    let savedOperator = "";
+
+    function handleClick(evnt) {
+
+        let target = evnt.target;
+        console.log(target);
+        //If calculate is pressed
+        if (target.getAttribute("id") === "calculate") {
+            calculate();
+            updateDisplay();
+        //If a button with the class operator is pressed
+        } else if (target.className.indexOf("operator") != -1) {
+            //if the current number is the first one to be entered
+            if (savedNumber === "") {
+                //Save the current number, operator pressed and clear the display
+                savedNumber = display;
+                savedOperator = target.getAttribute("id");
+                display = "";
+                pressOperator()
+            //If this is not the first number pressed and another operator has already been pressed
+            //This happens if the user has just pressed an operator and then presses another
+            } else if (savedOperator !== "" && savedNumber !== "") {
+                //switch operators
+                savedOperator = target.getAttribute("id");
+                pressOperator();
+            }
+        }else if(target.getAttribute("id") == "buttons") {
+            //User has pressed the space between buttons. 
+            //This case is caught here, so nothing happens
+            console.log("user misclicked");
+        //if none of the above happens, the user has pressed a number
+        }else {
+            display += target.getAttribute("id");
+            updateDisplay();
+        }
+    }
+    
+    function updateDisplay() {
+        document.getElementById("display").innerHTML = display;
+    }
+
+    function calculate() {
+        //If saved number and saved operator aren't empty, do calculation
+        if (savedNumber !== "" && savedOperator !== "") {
+            //calculate based on operator
+            switch (savedOperator) {
+                case "add":
+                    display = (1 * savedNumber) + (1 * display);
+                    savedNumber = "";
+                    savedOperator = "";
+                    break;
+                case "subtract":
+                    display = savedNumber - display;
+                    savedNumber = "";
+                    savedOperator = "";
+                    break;
+                case "multiply":
+                    display = savedNumber * display;
+                    savedNumber = "";
+                    savedOperator = "";
+                    break;
+                case "divide":
+                    display = savedNumber / display;
+                    savedNumber = "";
+                    savedOperator = "";
+                    break;
+            }
+            pressOperator();
+            
+        } else if (savedNumber === "") {
+            display = "Error: No number found";
+        } else if (savedOperator === "") {
+            display = "Error: No operator found";
+        }
+    }
+
+    function pressOperator() {
+        //When an operator has been pressed, it turns grey and all other operators
+        // return to original style
+        let style = "border: 1px solid lightgrey; background-color: darkgrey";
+        
+        switch (savedOperator) {
+            case "add":
+                document.getElementById("add").style = style;
+                document.getElementById("subtract").style = "";
+                document.getElementById("multiply").style = "";
+                document.getElementById("divide").style = "";
+                break;
+            case "subtract":
+                document.getElementById("add").style = "";
+                document.getElementById("subtract").style = style;
+                document.getElementById("multiply").style = "";
+                document.getElementById("divide").style = "";
+                break;
+            case "multiply":
+                document.getElementById("add").style = "";
+                document.getElementById("subtract").style = "";
+                document.getElementById("multiply").style = style;
+                document.getElementById("divide").style = "";
+                break;
+            case "divide":
+                document.getElementById("add").style = "";
+                document.getElementById("subtract").style = "";
+                document.getElementById("multiply").style = "";
+                document.getElementById("divide").style = style;
+                break;
+            case "":
+                document.getElementById("add").style = "";
+                document.getElementById("subtract").style = "";
+                document.getElementById("multiply").style = "";
+                document.getElementById("divide").style = "";
+                break;
+        }
+    }
+
+    function clear() {
+        display = "";
+        savedNumber = "";
+        savedOperator = "";
+        pressOperator();
+        updateDisplay();
+    }
+</script>
+
+<style>
+    #container{
+        width: 226px;
+        height: 274px;
+        border: 3px solid darkblue;
+        margin: auto
+    }
+    .t1, .t4{
+        border: 1px solid black;
+        height: 48px;
+        margin-left: 3px;
+        margin-top: 3px;
+        display: inline-block;
+        text-align: center;
+        line-height: 48px;
+    }
+    .t1{
+        width: 48px;
+    }
+    .t4{
+        width: 219px;
+    }
+
+</style>

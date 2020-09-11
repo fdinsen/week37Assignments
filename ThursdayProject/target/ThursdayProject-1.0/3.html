@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <div id="content"></div>
+            <form id="nameForm">
+                <input type="text" id="name" placeholder="Name">
+                <input type="submit" id="nameSubmit" value="Submit name">
+            </form>
+            <div id="removeButtons">
+                <button id="first">Remove First</button>
+                <button id="last">Remove Last</button>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+    let listOfNames = [];
+    
+    document.getElementById("nameSubmit").addEventListener("click", addName);
+    document.getElementById("removeButtons").addEventListener("click", remove);
+    
+    function addName(evnt) {
+        evnt.preventDefault();
+        listOfNames.push(document.getElementById("name").value);
+        document.getElementById("name").value = "";
+        console.log(listOfNames);
+        updatePage();
+    }
+    
+    function updatePage() {
+        let ul = "<ul><li>" + listOfNames.join("</li><li>") + "</li></ul>";
+        document.getElementById("content").innerHTML = ul;
+    }
+    
+    //This could be two functions, but this is more fun
+    function remove(evnt) {
+        let idOfButtonClicked = evnt.target.getAttribute("id");
+        if(idOfButtonClicked == "first") {
+            listOfNames.shift();
+        }else if (idOfButtonClicked == "last") {
+            listOfNames.pop();
+        }else {
+            //if button clicked is neither, there is no need to update
+            //this shouldn't ever be reached
+            return;
+        }
+        updatePage();
+    }
+</script>
